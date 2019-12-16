@@ -49,7 +49,18 @@ res.send("Site scraped")
     });
 });
 app.get("/", function(req, res){
-    res.render("index");
+    db.Site.find({})
+    .then(function (dbArticle) {
+        let hbsObject;
+        hbsObject = {
+            articles: dbArticle
+        };
+        res.render("index", hbsObject);        
+    })
+    .catch(function (err) {
+        // If an error occurred, send it to the client
+        res.json(err);
+    });
 });
 
 app.get("/articles", function(req, res){
