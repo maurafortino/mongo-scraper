@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
-const exphbs = require("express-handlebars");
+var exphbs = require("express-handlebars");
 
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
@@ -47,6 +47,9 @@ app.get("/scrape", function(req, res){
 
 res.send("Site scraped")
     });
+});
+app.get("/", function(req, res){
+    res.render("index");
 });
 
 app.get("/articles", function(req, res){

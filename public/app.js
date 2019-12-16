@@ -1,12 +1,13 @@
 $.getJSON("/articles", function(data) {
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 45; i < data.length; i++) {
         const articleTitle = $("<h2>").text(data[i].title);
-        const articleSummary = $("<p>").text(data[i].summary)
-        const articleLink = $("<a>").attr("href". data[i].link);
-        const button = $("<button>").text("Add Note");
-        button.attr("data-id", data[i]._id);
-        articleLink.text("click for article");
-      $("#articles").append(articleTitle, articleSummary, articleLink, button) ;
+      //   const articleSummary = $("<p>").text(data[i].summary)
+      //   const articleLink = $("<a>").attr("href". data[i].link);
+      //   const button = $("<button>").text("Add Note");
+      //   button.attr("data-id", data[i]._id);
+      //   articleLink.text("click for article");
+      // $("#articles").append(articleTitle, articleSummary, articleLink, button) ;
+      console.log(data[i].title);
     }
   });
   
