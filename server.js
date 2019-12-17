@@ -22,6 +22,10 @@ var exphbs = require("express-handlebars");
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+
+mongoose.connect(MONGODB_URI);
+
 mongoose.connect("mongodb://localhost/classConnection", { useNewUrlParser: true });
 
 app.get("/scrape", function (req, res) {
@@ -29,20 +33,24 @@ app.get("/scrape", function (req, res) {
         const $ = cheerio.load(response.data);
 
         $("div.blog-entry-content").each(function (i, element) {
-
+            const count = i;
             const result = {};
+            
+            result.title = $(element).children("header.entry-header").children("h2.entry-title").children("a").text();
+            result.summary = $(element).children("div.entry-summary").children("p").text();
+            result.link = $(element).children("header.entry-header").children("h2.entry-title").children("a").attr("href");
 
-            result.title = $(this).children("header.entry-header").children("h2.entry-title").children("a").text();
-            result.summary = $(this).children("div.entry-summary").children("p").text();
-            result.link = $(this).children("header.entry-header").children("h2.entry-title").children("a").attr("href");
+            if(result.title && result.link && result.summary){
 
+            
             db.Site.create(result).then(function (dbSite) {
                 console.log(dbSite);
+                count++;
             }).catch(function (err) {
                 console.log(err)
             });
 
-
+        }
         });
 
         res.send("Site scraped")
