@@ -1,5 +1,5 @@
 $.getJSON("/articles", function (data) {
-  for (let i = 45; i < data.length; i++) {
+  for (let i = 0; i < data.length; i++) {
     const articleTitle = $("<h5>").text(data[i].title);
     const articleSummary = $("<p>").text(data[i].summary)
     const articleLink = $("<a>").attr("href", data[i].link);

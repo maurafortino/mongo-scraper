@@ -71,6 +71,13 @@ app.get("/", function (req, res) {
             res.json(err);
         });
 });
+app.get("/remove", function (req, res){
+    db.Site.remove().then(function(dbSite){
+        res.json(dbSite);
+    }).catch(function (err) {
+        res.json(err);
+    });
+});
 
 app.get("/articles", function (req, res) {
     db.Site.find({}).then(function(dbSite) {
