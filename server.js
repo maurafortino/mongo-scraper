@@ -22,11 +22,11 @@ var exphbs = require("express-handlebars");
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/heroku_htsr70w8";
 
 mongoose.connect(MONGODB_URI);
 
-mongoose.connect("mongodb://localhost/classConnection", { useNewUrlParser: true });
+// mongoose.connect("mongodb://localhost/classConnection", { useNewUrlParser: true });
 
 app.get("/scrape", function (req, res) {
     axios.get("http://cuchimes.com/").then(function (response) {
