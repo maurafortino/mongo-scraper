@@ -24,71 +24,72 @@ app.set("view engine", "handlebars");
 
 mongoose.connect("mongodb://localhost/classConnection", { useNewUrlParser: true });
 
-app.get("/scrape", function(req, res){
-    axios.get("http://cuchimes.com/").then(function(response){
+app.get("/scrape", function (req, res) {
+    axios.get("http://cuchimes.com/").then(function (response) {
         const $ = cheerio.load(response.data);
 
-        $("div.blog-entry-content").each(function(i, element){
-            
+        $("div.blog-entry-content").each(function (i, element) {
+
             const result = {};
 
             result.title = $(this).children("header.entry-header").children("h2.entry-title").children("a").text();
             result.summary = $(this).children("div.entry-summary").children("p").text();
             result.link = $(this).children("header.entry-header").children("h2.entry-title").children("a").attr("href");
 
-            db.Site.create(result).then(function(dbSite){
+            db.Site.create(result).then(function (dbSite) {
                 console.log(dbSite);
-            }).catch(function(err){
+            }).catch(function (err) {
                 console.log(err)
             });
-    
+
 
         });
 
-res.send("Site scraped")
+        res.send("Site scraped")
     });
 });
-app.get("/", function(req, res){
+
+app.get("/", function (req, res) {
     db.Site.find({})
-    .then(function (dbArticle) {
-        let hbsObject;
-        hbsObject = {
-            articles: dbArticle
-        };
-        res.render("index", hbsObject);        
-    })
-    .catch(function (err) {
-        // If an error occurred, send it to the client
-        res.json(err);
-    });
+        .then(function (dbArticle) {
+            let hbsObject;
+            hbsObject = {
+                articles: dbArticle
+            };
+            res.render("index", hbsObject);
+        })
+        .catch(function (err) {
+            // If an error occurred, send it to the client
+            res.json(err);
+        });
 });
 
-app.get("/articles", function(req, res){
-    db.Site.find({}).then(function(dbSite){
+app.get("/articles", function (req, res) {
+    db.Site.find({}).then(function(dbSite) {
         res.json(dbSite);
-    }).catch(function(err){
+    }).catch(function (err) {
         res.json(err);
     });
 });
 
-app.get("articles/:id", function(req,res){
-    db.Site.findOne({_id: req.params.id}).populate("note").then(function(dbSite){
+app.get("/articles/:id", function (req, res) {
+    db.Site.findOne({ _id: req.params.id }).populate("note").then(function (dbSite) {
         res.json(dbSite);
-    }).catch(function(err){
+    }).catch(function (err) {
         res.json(err);
     });
 });
 
-app.post("/articles/:id", function(req, res){
-    db.Note.create(req.body).then(function(dbNote){
-        return db.Site.findOneAndUpdate({_id: req.params.id}, {note: dbNote._id}, {new: true});
-    }).then(function(dbSite){
+app.post("/articles/:id", function (req, res) {
+    db.Note.create(req.body).then(function (dbNote) {
+        return db.Site.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
+    }).then(function (dbSite) {
         res.json(dbSite);
-    }).catch(function(err){
+    }).catch(function (err) {
         res.json(err);
     });
 });
 
-app.listen(PORT, function(){
+app.listen(PORT, function () {
     console.log("App running on port " + PORT);
 });
